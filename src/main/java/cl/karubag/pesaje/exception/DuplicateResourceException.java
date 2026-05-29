@@ -1,0 +1,7 @@
+package cl.karubag.pesaje.exception;
+
+public class DuplicateResourceException extends RuntimeException {
+    public DuplicateResourceException(String message) {
+        super(message);
+    }
+}

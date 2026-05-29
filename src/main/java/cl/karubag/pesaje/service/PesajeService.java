@@ -3,6 +3,7 @@ package cl.karubag.pesaje.service;
 import cl.karubag.pesaje.dto.PesajeDTO;
 import cl.karubag.pesaje.model.Pesaje;
 import cl.karubag.pesaje.repository.PesajeRepository;
+import cl.karubag.pesaje.exception.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,7 +34,7 @@ public class PesajeService {
 
     public PesajeDTO obtenerPorId(Long id) {
         Pesaje pesaje = pesajeRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Pesaje no encontrado con id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Pesaje no encontrado con id: " + id));
         return toDTO(pesaje);
     }
 
@@ -57,7 +58,7 @@ public class PesajeService {
 
     public PesajeDTO actualizar(Long id, PesajeDTO dto) {
         Pesaje pesaje = pesajeRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Pesaje no encontrado con id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Pesaje no encontrado con id: " + id));
         pesaje.setRetiroId(dto.getRetiroId());
         pesaje.setMaterialId(dto.getMaterialId());
         pesaje.setKilos(dto.getKilos());
