@@ -3,6 +3,8 @@ package cl.karubag.pesaje.service;
 import cl.karubag.pesaje.dto.PesajeDTO;
 import cl.karubag.pesaje.model.Pesaje;
 import cl.karubag.pesaje.repository.PesajeRepository;
+import cl.karubag.pesaje.client.MaterialClient;
+import cl.karubag.pesaje.exception.ResourceNotFoundException;
 import cl.karubag.pesaje.exception.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -12,9 +14,12 @@ import java.util.stream.Collectors;
 public class PesajeService {
 
     private final PesajeRepository pesajeRepository;
+    private final MaterialClient materialClient;
 
-    public PesajeService(PesajeRepository pesajeRepository) {
+    public PesajeService(PesajeRepository pesajeRepository,
+                     MaterialClient materialClient) {
         this.pesajeRepository = pesajeRepository;
+        this.materialClient = materialClient;
     }
 
     public List<PesajeDTO> listarTodos() {
@@ -49,11 +54,18 @@ public class PesajeService {
     }
 
     public PesajeDTO crear(PesajeDTO dto) {
-        Pesaje pesaje = toEntity(dto);
-        if (pesaje.getPrecioPorKilo() != null && pesaje.getKilos() != null) {
-            pesaje.setTotalCalculado(pesaje.getKilos() * pesaje.getPrecioPorKilo());
+        if (!materialClient.existeMaterial(dto.getMaterialId())) {
+        throw new ResourceNotFoundException("Material no encontrado con id: " + dto.getMaterialId());
         }
-        return toDTO(pesajeRepository.save(pesaje));
+        Pesaje pesaje = toEntity(dto);
+        if (pesaje.getPrecioPorKilo() == null) {
+        Double precio = materialClient.obtenerPrecioPorKilo(dto.getMaterialId());
+        pesaje.setPrecioPorKilo(precio);
+        }
+        if (pesaje.getPrecioPorKilo() != null && pesaje.getKilos() != null) {
+        pesaje.setTotalCalculado(pesaje.getKilos() * pesaje.getPrecioPorKilo());
+        }
+        return toDTO(pesajeRepository.save(pesaje));    
     }
 
     public PesajeDTO actualizar(Long id, PesajeDTO dto) {
