@@ -6,6 +6,7 @@ import cl.karubag.pesaje.repository.PesajeRepository;
 import cl.karubag.pesaje.client.MaterialClient;
 import cl.karubag.pesaje.exception.ResourceNotFoundException;
 import cl.karubag.pesaje.exception.ResourceNotFoundException;
+import cl.karubag.retiro.client.ClienteClient;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -13,13 +14,13 @@ import java.util.stream.Collectors;
 @Service
 public class PesajeService {
 
-    private final PesajeRepository pesajeRepository;
-    private final MaterialClient materialClient;
+    private final RetiroRepository retiroRepository;
+    private final ClienteClient clienteClient;
 
-    public PesajeService(PesajeRepository pesajeRepository,
-                     MaterialClient materialClient) {
-        this.pesajeRepository = pesajeRepository;
-        this.materialClient = materialClient;
+    public RetiroService(RetiroRepository retiroRepository,
+                     ClienteClient clienteClient) {
+        this.retiroRepository = retiroRepository;
+        this.clienteClient = clienteClient;
     }
 
     public List<PesajeDTO> listarTodos() {
@@ -53,19 +54,11 @@ public class PesajeService {
         return total != null ? total : 0.0;
     }
 
-    public PesajeDTO crear(PesajeDTO dto) {
-        if (!materialClient.existeMaterial(dto.getMaterialId())) {
-        throw new ResourceNotFoundException("Material no encontrado con id: " + dto.getMaterialId());
+    public RetiroDTO crear(RetiroDTO dto) {
+        if (!clienteClient.existeCliente(dto.getClienteId())) {
+        throw new ResourceNotFoundException("Cliente no encontrado con id: " + dto.getClienteId());
         }
-        Pesaje pesaje = toEntity(dto);
-        if (pesaje.getPrecioPorKilo() == null) {
-        Double precio = materialClient.obtenerPrecioPorKilo(dto.getMaterialId());
-        pesaje.setPrecioPorKilo(precio);
-        }
-        if (pesaje.getPrecioPorKilo() != null && pesaje.getKilos() != null) {
-        pesaje.setTotalCalculado(pesaje.getKilos() * pesaje.getPrecioPorKilo());
-        }
-        return toDTO(pesajeRepository.save(pesaje));    
+        return toDTO(retiroRepository.save(toEntity(dto)));
     }
 
     public PesajeDTO actualizar(Long id, PesajeDTO dto) {
