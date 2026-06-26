@@ -15,7 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
-@Tag(name = "Pesajes", description = "Gestión de pesajes de materiales reciclados Karübag")
+@Tag(name = "Pesajes", description = "Gestion de pesajes de materiales reciclados Karübag")
 @RestController
 @RequestMapping("/api/pesajes")
 public class PesajeController {
@@ -33,14 +33,14 @@ public class PesajeController {
         return ResponseEntity.ok(pesajeService.listarTodos());
     }
 
-    @Operation(summary = "Listar por retiro", description = "Retorna pesajes de un retiro específico")
+    @Operation(summary = "Listar por retiro", description = "Retorna pesajes de un retiro especifico")
     @ApiResponse(responseCode = "200", description = "Lista de pesajes del retiro")
     @GetMapping("/retiro/{retiroId}")
     public ResponseEntity<List<PesajeDTO>> listarPorRetiro(@PathVariable Long retiroId) {
         return ResponseEntity.ok(pesajeService.listarPorRetiro(retiroId));
     }
 
-    @Operation(summary = "Listar por material", description = "Retorna pesajes de un material específico")
+    @Operation(summary = "Listar por material", description = "Retorna pesajes de un material especifico")
     @ApiResponse(responseCode = "200", description = "Lista de pesajes por material")
     @GetMapping("/material/{materialId}")
     public ResponseEntity<List<PesajeDTO>> listarPorMaterial(@PathVariable Long materialId) {
@@ -71,19 +71,19 @@ public class PesajeController {
         return ResponseEntity.ok(pesajeService.obtenerPorId(id));
     }
 
-    @Operation(summary = "Crear pesaje", description = "Registra un pesaje obteniendo precio automáticamente via WebClient")
+    @Operation(summary = "Crear pesaje", description = "Registra un pesaje obteniendo precio automaticamente via WebClient")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "201", description = "Pesaje creado con precio y total calculados automáticamente",
+        @ApiResponse(responseCode = "201", description = "Pesaje creado con precio y total calculados automaticamente",
             content = @Content(schema = @Schema(implementation = PesajeDTO.class),
-            examples = @ExampleObject(value = "{\"retiroId\": 1, \"materialId\": 1, \"kilos\": 3.5, \"observacion\": \"Cartón reciclado\"}"))),
+            examples = @ExampleObject(value = "{\"retiroId\": 1, \"materialId\": 1, \"kilos\": 3.5, \"observacion\": \"Carton reciclado\"}"))),
         @ApiResponse(responseCode = "404", description = "Material no encontrado")
     })
     @PostMapping
     public ResponseEntity<PesajeDTO> crear(
         @io.swagger.v3.oas.annotations.parameters.RequestBody(
-            description = "Solo ingresa retiroId, materialId y kilos. El precio se obtiene automáticamente.",
+            description = "Solo ingresa retiroId, materialId y kilos. El precio se obtiene automaticamente.",
             required = true,
-            content = @Content(examples = @ExampleObject(value = "{\"retiroId\": 1, \"materialId\": 1, \"kilos\": 3.5, \"observacion\": \"Cartón reciclado\"}")))
+            content = @Content(examples = @ExampleObject(value = "{\"retiroId\": 1, \"materialId\": 1, \"kilos\": 3.5, \"observacion\": \"Carton reciclado\"}")))
         @Valid @RequestBody PesajeDTO dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(pesajeService.crear(dto));
     }

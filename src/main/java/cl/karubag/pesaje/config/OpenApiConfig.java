@@ -11,6 +11,6 @@ public class OpenApiConfig {
                 .info(new Info()
                         .title("Pesaje Servicio API")
                         .version("1.0")
-                        .description("API de gestión de pesajes Karübag"));
+                        .description("API de gestion de pesajes Karübag"));
     }
 }
