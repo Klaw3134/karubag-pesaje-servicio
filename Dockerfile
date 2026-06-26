@@ -1,4 +1,4 @@
-# Etapa 1: build con Maven Wrapper
+﻿# Etapa 1: build con Maven Wrapper
 FROM eclipse-temurin:21-jdk AS build
 WORKDIR /app
 
@@ -17,4 +17,4 @@ COPY --from=build /app/target/*.jar app.jar
 
 EXPOSE 8080
 
-ENTRYPOINT ["sh", "-c", "java -jar app.jar --server.port=\"]
+ENTRYPOINT ["sh", "-c", "java -jar app.jar --server.port=${PORT:-8080}"]
