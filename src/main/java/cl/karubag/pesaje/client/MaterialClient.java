@@ -11,7 +11,7 @@ public class MaterialClient {
 
     public MaterialClient(WebClient.Builder webClientBuilder) {
         this.webClient = webClientBuilder
-                .baseUrl("http://localhost:8083")
+                .baseUrl("https://karubag-material-servicio.onrender.com")
                 .build();
     }
 
